@@ -1,11 +1,9 @@
 # 此函数作用是对初始语料进行分词处理后，作为训练模型的语料
-import re
-
-
+import r
 def cut_txt(old_file):
     import jieba
     global cut_file     # 分词之后保存的文件名
-    cut_file = old_file + '_cut1.csv'
+    cut_file = old_file + '清洗分词完成.csv'
 
     try:
         fi = open(old_file, 'r', encoding='utf-8')
