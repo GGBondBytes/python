@@ -8,16 +8,10 @@ import json
 from bs4 import BeautifulSoup
 import importlib
 importlib.reload(sys)
-import jieba
-from wordcloud import WordCloud
-import  numpy as np
-from snownlp import SnowNLP
-import matplotlib.pyplot as plt
-# 要爬取热评的起始url
-url = 'https://m.weibo.cn/comments/hotflow?id=4455529256335361&mid=4455529256335361&max_id='
+url = 'https://m.weibo.cn/comments/hotflow?id=***&mid=***&max_id='#将***替换成你要爬的微博id
 headers = {
-    'Cookie': '',#你的coolie
-    'Referer': 'https://m.weibo.cn/detail/4455529256335361',
+    'Cookie': '***',#将***替换成你的cookie
+    'Referer': 'https://m.weibo.cn/detail/***',#将***替换成你要爬的微博id
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'
 }
@@ -45,17 +39,15 @@ def parse_page(jsondata):
 
 def write_csv(jsondata):
     datas = jsondata.get('data').get('data')
-
     for data in datas:
         comment = data.get("text")
         comment = BeautifulSoup(comment, 'lxml').get_text()
         writer.writerow([json.dumps(comment,  ensure_ascii=False)])
 
 # 存为csv
-path = os.getcwd() + "./Data/微博评论数据.csv"#
-csvfile = open(path, 'w',newline='',encoding = 'utf-8')
+csvfile = open('./result/微博爬评论.csv', 'w',newline='',encoding = 'utf-8')
 writer = csv.writer(csvfile)
-maxpage =17 #爬取的数量
+maxpage =100 #爬取的页数
 m_id = 0
 id_type = 0
 for page in range(0, maxpage):
@@ -63,7 +55,6 @@ for page in range(0, maxpage):
     jsondata = get_page(m_id, id_type)
     write_csv(jsondata)
     results = parse_page(jsondata)
-    time.sleep(2)
+    time.sleep(2) #休眠时间，防止被封号
     m_id = results['max_id']
     id_type = results['max_id_type']
-
